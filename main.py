@@ -35,7 +35,6 @@ class MyFirstHTTPServer(BaseHTTPRequestHandler):
     def do_POST(self):
         length = self.headers.get('Content-length')
         data = self.rfile.read(int(length))
-        # parse_data = urllib.parse.unquote_plus(data.decode())
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         client_socket.sendto(data, (SOCKET_HOST, SOCKET_PORT))
         client_socket.close()
