@@ -65,15 +65,25 @@ def save_data_from_form(data):
     data_time = str(datetime.datetime.now())
     parse_data = data.decode()
     try:
-        parse_to_dict = {data_time: {key: value for key, value in [el.split('=') for el in parse_data.split('&')]}}
-        print(parse_to_dict)
-        with open('storage/data.json', 'a', encoding='utf-8') as f_json:
-            json.dump(parse_to_dict, f_json, ensure_ascii=False, indent=4)
-            f_json.write(',\n')
+        parse_to_dict = {key: value for key, value in [el.split('=') for el in parse_data.split('&')]}
+        check_json(data_time,parse_to_dict)
     except ValueError as err:
         logging.error(err)
     except OSError as err:
         logging.error(err)
+
+
+def check_json(data_time, parde_dict):
+    try:
+        with open('storage/data.json', 'r') as l_file:
+            reader = json.load(l_file)
+        reader[data_time] = parde_dict
+        with open('storage/data.json', 'w', encoding='utf-8') as f_json:
+            json.dump(reader, f_json, ensure_ascii=False, indent=4)
+    except:
+        start_json = {data_time: parde_dict}
+        with open('storage/data.json', 'w', encoding='utf-8') as f_json:
+            json.dump(start_json, f_json, ensure_ascii=False, indent=2)
 
 
 def run_socket_server(host, port):
